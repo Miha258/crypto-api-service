@@ -13,10 +13,6 @@ This is a simple API service that provides cryptocurrency exchange rates from Bi
 
 ## Running the Project with Docker
 
-### Step 1: Clone the Repository
-
-First, clone the repository to your local machine:
-
 ```bash
 git clone https://github.com/Miha258/crypto-api-service
 cd crypto-exchange-api
