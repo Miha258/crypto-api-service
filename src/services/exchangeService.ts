@@ -6,15 +6,23 @@ interface Rate {
   rate: number;
 }
 
-const getRates = async (baseCurrency: string, quoteCurrency: string): Promise<Rate[]> => {
-  try {
-    const binanceRate = await getBinanceRate(baseCurrency, quoteCurrency);
-    const kucoinRate = await getKuCoinRate(baseCurrency, quoteCurrency);
 
-    return [
-      { exchangeName: 'binance', rate: binanceRate },
-      { exchangeName: 'kucoin', rate: kucoinRate }
-    ];
+const getRates = async (baseCurrency: string, quoteCurrency: string): Promise<Rate[]> => {
+  const exchanges = [
+    { exchangeName: 'binance', getRate: getBinanceRate },
+    { exchangeName: 'kucoin', getRate: getKuCoinRate },
+    // You can add new services here
+  ];
+
+  try {
+    const rates = await Promise.all(
+      exchanges.map(async (exchange) => {
+        const rate = await exchange.getRate(baseCurrency, quoteCurrency);
+        return { exchangeName: exchange.exchangeName, rate };
+      })
+    );
+    
+    return rates;
   } catch (error) {
     console.error('Error fetching rates:', error);
     throw error;
